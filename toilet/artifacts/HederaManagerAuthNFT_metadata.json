@@ -1,0 +1,307 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "CallResponseEvent",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "getToiletList",
+				"outputs": [
+					{
+						"internalType": "string[]",
+						"name": "",
+						"type": "string[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "encodedFunctionSelector",
+						"type": "bytes"
+					}
+				],
+				"name": "redirectForToken",
+				"outputs": [
+					{
+						"internalType": "int256",
+						"name": "responseCode",
+						"type": "int256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "response",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "symbol",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "memo",
+						"type": "string"
+					},
+					{
+						"internalType": "int64",
+						"name": "maxSupply",
+						"type": "int64"
+					},
+					{
+						"internalType": "string",
+						"name": "uri",
+						"type": "string"
+					}
+				],
+				"name": "registerToilet",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferFrom",
+				"outputs": [
+					{
+						"internalType": "int64",
+						"name": "responseCode",
+						"type": "int64"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "serialNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "transferFromNFT",
+				"outputs": [
+					{
+						"internalType": "int64",
+						"name": "responseCode",
+						"type": "int64"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"redirectForToken(address,bytes)": {
+					"params": {
+						"encodedFunctionSelector": "The function selector from the ERC20 interface + the bytes input for the function called",
+						"token": "The token address"
+					},
+					"returns": {
+						"response": "The result of the call that had been encoded and sent for execution.",
+						"responseCode": "The response code for the status of the request. SUCCESS is 22."
+					}
+				},
+				"transferFrom(address,address,address,uint256)": {
+					"params": {
+						"amount": "The amount of tokens to transfer from `from` to `to`",
+						"from": "The account address of the owner of the token, on the behalf of which to transfer `amount` tokens",
+						"to": "The account address of the receiver of the `amount` tokens",
+						"token": "The address of the fungible Hedera token to transfer"
+					},
+					"returns": {
+						"responseCode": "The response code for the status of the request. SUCCESS is 22."
+					}
+				},
+				"transferFromNFT(address,address,address,uint256)": {
+					"params": {
+						"from": "The account address of the owner of `serialNumber` of `token`",
+						"serialNumber": "The NFT serial number to transfer",
+						"to": "The account address of the receiver of `serialNumber`",
+						"token": "The address of the non-fungible Hedera token to transfer"
+					},
+					"returns": {
+						"responseCode": "The response code for the status of the request. SUCCESS is 22."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"CallResponseEvent(bool,bytes)": {
+					"notice": "Generic event"
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"redirectForToken(address,bytes)": {
+					"notice": "Redirect for token"
+				},
+				"transferFrom(address,address,address,uint256)": {
+					"notice": "Only applicable to fungible tokens"
+				},
+				"transferFromNFT(address,address,address,uint256)": {
+					"notice": "Transfers `serialNumber` of `token` from `from` to `to` using the allowance mechanism. Only applicable to NFT tokens"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"toilet/Toilet.sol": "HederaManagerAuthNFT"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"hts-precompile/ExpiryHelper.sol": {
+			"keccak256": "0xec1234c514c202ee7728ae6362b09750c1ac67a77c0ac900d1f373548755963e",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://5c4e4a2451cfe0f4e2816bbd235c33a0e944087ed2c160ee0cdbb5ff940f90b9",
+				"dweb:/ipfs/QmTgdMDT96Y5opyPyn3J1g9iwAyrrikwnjwRxiToxvS3Ws"
+			]
+		},
+		"hts-precompile/HederaResponseCodes.sol": {
+			"keccak256": "0x85734572347c25f45480488ad4fdb63ed749a794daac839540f5b0eb7dbb22e6",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://addc4c8c31e1b3fd001986599856bb39e9cb4532a922155f699aae1686563e63",
+				"dweb:/ipfs/QmXJES7o4xoSowiDo3qm3Mr3LaWm7g5qTQosw5EAAiz9R5"
+			]
+		},
+		"hts-precompile/HederaTokenService.sol": {
+			"keccak256": "0x6c033df088afe675d88f6593e58b3983e24d5cd111f07d6a591a5d4eb92ed938",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://af613eabd172a37b589910c8de388b3a88f6b383f6d3684683c7972e1ff3d5f0",
+				"dweb:/ipfs/QmVgspV9LVXMGhsfEfw3xS4xx9eRvB2HgfxYZs9R2XpzXf"
+			]
+		},
+		"hts-precompile/IHederaTokenService.sol": {
+			"keccak256": "0x781bf7761cc3c4c6af07be54c53e7fd9437b9eb8968bb687b36d6722ca04c419",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://8c9aa0d0e07a102c1d4056fabc548de9c47de518fa59cd8449d618f3399eccb1",
+				"dweb:/ipfs/QmXTHsR8qqKdELiFKUSwk1aC6nP6GiFbm9W7ySwq5cpvCr"
+			]
+		},
+		"hts-precompile/KeyHelper.sol": {
+			"keccak256": "0xf3a6185aacf2e4964df0a4ad35f4190abe75fb7ed8e6846459513df86a08389a",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://8700852d1b95bb75bb4f2dd0b8eeb97829d7baa5c3440db874c09d043d2f7a89",
+				"dweb:/ipfs/QmP7JneGLR9QHFsGZmDmqUWQDQ6TjWcQWZnbjuxLYzx6dB"
+			]
+		},
+		"toilet/Toilet.sol": {
+			"keccak256": "0x500a36a5206e9e7ba9df1945a3f4c63f60a6086ccc8196795228a2ad67a8bcf0",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2a7fc81aeb0c4d1e23198712ebcd0077c483f961517aafda39bcbdf89e537859",
+				"dweb:/ipfs/QmYrDn9S9ZkM4AFu44tk6vLDXJM2pecG5yLeqm341xBv5A"
+			]
+		}
+	},
+	"version": 1
+}

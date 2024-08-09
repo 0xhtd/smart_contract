@@ -59,14 +59,17 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
         return createdToken;
     }
 
-    function useToilet(string memory name) public {
+    function enterToilet(string memory name) public returns (uint256) {
         address token = toiletAddress[name];
         address owner = toiletOwner[token];
         uint256 ticket;
-        for (uint256 i = 0; i < toiletTicket[owner].length; i++) {
-            if (toiletTicket[owner][i].available) {
-                ticket = i;
+        for (ticket = 0; ticket < toiletTicket[owner].length; ticket++) {
+            if (toiletTicket[owner][ticket].available) {
+                break;
             }
+        }
+        if (ticket == toiletTicket[owner].length) {
+            revert("not available toilet");
         }
         int responseCode = HederaTokenService.transferNFT(token, owner, msg.sender, toiletTicket[owner][ticket].serial);
         if (responseCode == HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT) {
@@ -82,5 +85,16 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
                 revert("failed to transfer non-fungible token");
         }
         toiletTicket[owner][ticket].available = false;
+        return ticket;
+    }
+
+    function exitToilet(string memory name, uint256 ticket) public {
+        address token = toiletAddress[name];
+        address owner = toiletOwner[token];
+        int responseCode = HederaTokenService.transferNFT(token, msg.sender, owner, toiletTicket[owner][ticket].serial);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert("failed to transfer non-fungible token");
+        }
+        toiletTicket[owner][ticket].available = true;
     }
 }

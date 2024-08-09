@@ -32,6 +32,43 @@
 			{
 				"inputs": [
 					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					}
+				],
+				"name": "enterToilet",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ticket",
+						"type": "uint256"
+					}
+				],
+				"name": "exitToilet",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "token",
 						"type": "address"
@@ -231,19 +268,6 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					}
-				],
-				"name": "useToilet",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -362,11 +386,11 @@
 			]
 		},
 		"toilet/Toilet.sol": {
-			"keccak256": "0x1756cfeaf9222860a844363a56fecdb9444a20c2c63978d929badfa738a0426e",
+			"keccak256": "0xf841ff4aae67d679908cfc9f93b66338c2a1c227c57a8e1001281f4df86fbfd2",
 			"license": "Apache-2.0",
 			"urls": [
-				"bzz-raw://4853071f77d226ded403b1a08d6db9b10d36193421242a2e1f5a7e7a3386aab6",
-				"dweb:/ipfs/QmWryrW3aHNRTUq3MVwMat6YQ6a2iBFhRVCYU4N8QnEbSy"
+				"bzz-raw://5f8e387791dd65c4897336722ed5ca090b944ba0406e35caa65bc5cf28037265",
+				"dweb:/ipfs/QmPsSkdio3J39v5pwMoa74MA6EjXoHp7nQh2putAzcdt4R"
 			]
 		}
 	},

@@ -35,9 +35,14 @@
 						"internalType": "string",
 						"name": "name",
 						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "receiver",
+						"type": "address"
 					}
 				],
-				"name": "enterToilet",
+				"name": "approveToilet",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -45,6 +50,24 @@
 						"type": "uint256"
 					}
 				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ticket",
+						"type": "uint256"
+					}
+				],
+				"name": "enterToilet",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -124,14 +147,21 @@
 					}
 				],
 				"name": "registerToilet",
-				"outputs": [
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
 					}
 				],
-				"stateMutability": "payable",
+				"name": "requestToilet",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -187,6 +217,11 @@
 				],
 				"name": "toiletTicket",
 				"outputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
 					{
 						"internalType": "int64",
 						"name": "serial",
@@ -386,11 +421,11 @@
 			]
 		},
 		"toilet/Toilet.sol": {
-			"keccak256": "0xf841ff4aae67d679908cfc9f93b66338c2a1c227c57a8e1001281f4df86fbfd2",
+			"keccak256": "0xabb97f839d3f25d238e2d6d6e7900517bf535fdd6172135275141cceec712ee1",
 			"license": "Apache-2.0",
 			"urls": [
-				"bzz-raw://5f8e387791dd65c4897336722ed5ca090b944ba0406e35caa65bc5cf28037265",
-				"dweb:/ipfs/QmPsSkdio3J39v5pwMoa74MA6EjXoHp7nQh2putAzcdt4R"
+				"bzz-raw://5d8cf755517601c372219c03f24ce05792b4e9bdf210c799ff83bf7af2969722",
+				"dweb:/ipfs/QmVKgQh3QadURU3bZwqMiPBzd8UJdf4rvVd6BuHxSw5j4n"
 			]
 		}
 	},

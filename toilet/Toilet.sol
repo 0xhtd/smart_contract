@@ -26,7 +26,7 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
         string memory memo,
         int64 maxSupply,
         string memory uri
-    ) external payable {
+    ) external payable returns (address) {
         IHederaTokenService.TokenKey[]
             memory keys = new IHederaTokenService.TokenKey[](1);
         keys[0] = getSingleKey(
@@ -64,56 +64,11 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
             if (responseCode != HederaResponseCodes.SUCCESS) {
                 revert("failed to mint non-fungible token");
             }
-            responseCode = HederaTokenService.transferNFT(
-                createdToken,
-                address(this),
-                msg.sender,
-                serial[0]
-            );
-            if (
-                responseCode ==
-                HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT
-            ) {
-                responseCode = HederaTokenService.associateToken(
-                    msg.sender,
-                    createdToken
-                );
-                if (responseCode != HederaResponseCodes.SUCCESS) {
-                    revert("failed to associate non-fungible token");
-                }
-            } else if (responseCode != HederaResponseCodes.SUCCESS) {
-                revert("failed to transfer non-fungible token");
-            }
             toiletTicket[msg.sender].push(Ticket(msg.sender, serial[0], true));
-        }
-        responseCode = HederaTokenService.setApprovalForAll(
-            createdToken,
-            msg.sender,
-            true
-        );
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("failed to approve all non-fungible token");
         }
         toiletAddress[name] = createdToken;
         toiletOwner[createdToken] = msg.sender;
-    }
-
-    function requestToilet(string memory name) public {
-        address token = toiletAddress[name];
-        address owner = toiletOwner[token];
-        uint256 ticket;
-        for (ticket = 0; ticket < toiletTicket[owner].length; ticket++) {
-            if (toiletTicket[owner][ticket].available) {
-                break;
-            }
-        }
-        if (ticket == toiletTicket[owner].length) {
-            revert("not available toilet");
-        }
-        int responseCode = HederaTokenService.associateToken(msg.sender, token);
-        if (responseCode != HederaResponseCodes.SUCCESS) {
-            revert("failed to associate non-fungible token");
-        }
+        return createdToken;
     }
 
     function approveToilet(

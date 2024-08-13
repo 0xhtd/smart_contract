@@ -70,7 +70,18 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
                 msg.sender,
                 serial[0]
             );
-            if (responseCode != HederaResponseCodes.SUCCESS) {
+            if (
+                responseCode ==
+                HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT
+            ) {
+                responseCode = HederaTokenService.associateToken(
+                    msg.sender,
+                    createdToken
+                );
+                if (responseCode != HederaResponseCodes.SUCCESS) {
+                    revert("failed to associate non-fungible token");
+                }
+            } else if (responseCode != HederaResponseCodes.SUCCESS) {
                 revert("failed to transfer non-fungible token");
             }
             toiletTicket[msg.sender].push(Ticket(msg.sender, serial[0], true));

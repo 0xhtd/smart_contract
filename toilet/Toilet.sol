@@ -10,6 +10,7 @@ import "../hts-precompile/KeyHelper.sol";
 contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
 
     struct Ticket {
+        address owner;
         int64 serial;
         bool available;
     }
@@ -21,7 +22,7 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
     constructor() {}
 
     function registerToilet(string memory name, string memory symbol, string memory memo, int64 maxSupply, string memory uri)
-        external payable returns (address){
+        external payable {
 
         IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
         keys[0] = getSingleKey(KeyType.SUPPLY, KeyValueType.CONTRACT_ID, address(this));
@@ -29,7 +30,7 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
         token.name = name;
         token.symbol = symbol;
         token.memo = memo;
-        token.treasury = address(this);
+        token.treasury = msg.sender;
         token.tokenSupplyType = true;
         token.maxSupply = maxSupply;
         token.tokenKeys = keys;
@@ -50,16 +51,17 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
             if(responseCode != HederaResponseCodes.SUCCESS){
                 revert("failed to mint non-fungible token");
             }
-            toiletTicket[msg.sender].push(Ticket(serial[0], true));
+            toiletTicket[msg.sender].push(Ticket(msg.sender, serial[0], true));
         }
-        
+        responseCode = HederaTokenService.setApprovalForAll(createdToken, msg.sender, true);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert("failed to approve all non-fungible token");
+        }
         toiletAddress[name] = createdToken;
         toiletOwner[createdToken] = msg.sender;
-
-        return createdToken;
     }
 
-    function enterToilet(string memory name) public returns (uint256) {
+    function requestToilet(string memory name) public {
         address token = toiletAddress[name];
         address owner = toiletOwner[token];
         uint256 ticket;
@@ -71,21 +73,44 @@ contract Toilet is ExpiryHelper, KeyHelper, HederaTokenService {
         if (ticket == toiletTicket[owner].length) {
             revert("not available toilet");
         }
-        int responseCode = HederaTokenService.transferNFT(token, owner, msg.sender, toiletTicket[owner][ticket].serial);
+        int responseCode = HederaTokenService.associateToken(msg.sender, token);
+        if (responseCode != HederaResponseCodes.SUCCESS) {
+            revert("failed to associate non-fungible token");
+        }
+    }
+
+    function approveToilet(string memory name, address receiver) public returns (uint256) {
+        address token = toiletAddress[name];
+        address owner = toiletOwner[token];
+        uint256 ticket;
+        for (ticket = 0; ticket < toiletTicket[owner].length; ticket++) {
+            if (toiletTicket[owner][ticket].available) {
+                break;
+            }
+        }
+        if (ticket == toiletTicket[owner].length) {
+            revert("not available toilet");
+        }
+        if (owner != msg.sender) {
+            revert("should be owner");
+        }
+        int responseCode = HederaTokenService.transferNFT(token, msg.sender, receiver, toiletTicket[owner][ticket].serial);
         if (responseCode == HederaResponseCodes.TOKEN_NOT_ASSOCIATED_TO_ACCOUNT) {
-            responseCode = HederaTokenService.associateToken(msg.sender, token);
-            if (responseCode != HederaResponseCodes.SUCCESS) {
-                revert("failed to associate non-fungible token");
-            }
-            responseCode = HederaTokenService.transferNFT(token, owner, msg.sender, toiletTicket[owner][ticket].serial);
-            if (responseCode != HederaResponseCodes.SUCCESS) {
-                revert("failed to transfer non-fungible token");
-            }
+            revert("should be associated non-fungible token");
         } else if (responseCode != HederaResponseCodes.SUCCESS) {
                 revert("failed to transfer non-fungible token");
         }
-        toiletTicket[owner][ticket].available = false;
+        toiletTicket[owner][ticket].owner = receiver;
         return ticket;
+    }
+
+    function enterToilet(string memory name, uint256 ticket) public {
+        address token = toiletAddress[name];
+        address owner = toiletOwner[token];
+        if (msg.sender != toiletTicket[owner][ticket].owner) {
+            revert("not authorized");
+        } 
+        toiletTicket[owner][ticket].available = false;
     }
 
     function exitToilet(string memory name, uint256 ticket) public {
